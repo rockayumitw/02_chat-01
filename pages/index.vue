@@ -241,22 +241,12 @@ export default {
                         }
                         return string.replace(new RegExp(target, 'g'), t);
                     } else {
-                        console.log(string)
-                        console.log(target)
-                        // 要拆兩次
-                        let arr = []
-                        let input = ''
-                        arr.push(target)
-                        console.log(string)
-                        for (var i = 0; i < arr.length; i++) {
-                            console.log(arr[i].data)
-                            t += '<img style="width:30px" src="' + arr[i].data + '"/>';
-                            console.log(t)
+
+                        for (var i = 0; i < target.length; i++) {
+                            console.log(target[i].data)
+                            t = '<img style="width:30px" src="' + target[i].data + '"/>';
                         }
-                        // input += string.replace(new RegExp(target, 'g'), t)
-                        // input += string.replace(new RegExp(target), t)
-                        input = string.replace(new RegExp(target, 'g'), t)
-                        return input;
+                        return string.replace(new RegExp(target[i - 1].text, 'g'), t);
                     }
                 };
 
@@ -276,14 +266,14 @@ export default {
                     // 做比對
                     // 傳進replace
                     let arr = []
-                    string = string.split("/")
+                    // string = string.split("/")
 
                     for (var i = 0; i < _this.emojiData.length; i++) { // 裡面撈取資料 => 兩筆應該撈取兩次
                         console.log(i)
                         if (string.indexOf(_this.emojiData[i].text) > -1) { // 搜尋到一個舊船全部
-                            arr.push(_this.emojiData[i].text)
+                            arr.push(_this.emojiData[i])
                             console.log(arr)
-                            string = replace(string, _this.emojiData[i], 'emotions')
+                            string = replace(string, arr, 'emotions')
                         }
                     }
 
@@ -330,23 +320,29 @@ export default {
                 from: 'self'
             }
 
-            let splitData = data.message.split('/')
-            if (splitData == undefined) {
-                return false
-            }
+            // let splitData = data.message.split('/')[1]
+            // console.log(splitData)
+            // splitData = splitData.substr(0, 5)
+            let arrData = []
+            arrData.push(data.message)
+            // console.log(splitData)
+
+            // if (splitData == undefined) {
+            //     return false
+            // }
 
             let result = emojiData.filter(function (element, index, arr) {
-                for (var i = 0; i < splitData.length; i++) {
-                    if (element.text == '/' + splitData[i]) {
+                for (var i = 0; i < arrData.length; i++) {
+                    if (element.text == arrData[i]) {
                         return element
                     }
                 }
             });
 
             let changeEmoji = ''
-            for (var i = 0; i < splitData.length; i++) {
+            for (var i = 0; i < arrData.length; i++) {
                 for (var j = 0; j < result.length; j++) {
-                    if (result[j].text == '/' + splitData[i]) {
+                    if (result[j].text == arrData[i]) {
                         // changeEmoji += '<img src=' + result[j].data + '>'
                         changeEmoji += result[j].text
                     }
